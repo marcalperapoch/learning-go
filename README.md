@@ -186,9 +186,50 @@ if v := math.Pow(x, n); v < lim {
 ```
 >Variables declared inside an if short statement are also available inside any of the else blocks.
 
+#### Switch statement
+```go
+switch os := runtime.GOOS; os {
+	case "darwin":
+		fmt.Println("OS X.")
+	case "linux":
+		fmt.Println("Linux.")
+	default:
+		// freebsd, openbsd,
+		// plan9, windows...
+		fmt.Printf("%s.", os)
+	}
+```
+> Note: the assignation of the variable next to the ```switch``` statement could be changed to ```switch runtime.GOOS {```.
+
+A ```switch```statement without condition is the same as ```switch true```.
+
+#### Defer
+A defer statement pospone the execution of a function until the last not defered **funciton** returns.
+
+```go
+func main() {
+	var a = 2;
+	defer fmt.Printf("a value is:  %v\n", a)
+	defer fmt.Println("almost the last function")
+	
+	fmt.Println("hello")
+	a = changeA(a)
+	fmt.Printf("here, a value is: %v\n", a)
+}
+```
+
+> The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
+
+Deferred function calls are pushed onto a **stack**. When a function returns, its deferred calls are executed in last-in-first-out order.
+
 ### Tricks
 ##### Print the type and value of a variable
 ```go
 v := 42 
 fmt.Printf("v is of type %T with value %v\n", v, v)
+```
+#### Time package
+```
+import "time"
+today := time.Now().Weekday()
 ```

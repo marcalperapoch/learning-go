@@ -222,6 +222,58 @@ func main() {
 
 Deferred function calls are pushed onto a **stack**. When a function returns, its deferred calls are executed in last-in-first-out order.
 
+### Data structures
+
+#### Pointers
+A pointer holds the memory address of a value. Pointers are declared as ```*T```where ```T``` is the type of the value pointed. Example:
+
+```go
+i, j := 42, 2701
+p := &i         // point to i
+fmt.Println(*p) // read i through the pointer
+*p = 21         // set i through the pointer
+fmt.Println(i)  // see the new value of i
+
+var secondPointer *int
+secondPointer = &j         // point to j
+*secondPointer = *secondPointer / 37   // divide j through the pointer
+fmt.Println(j) // see the new value of j
+```
+As seen above, the ```&``` operator generates a pointer to its operand.
+
+> In Go (unlike C) ther's no pointer arithmetic, so you can not do operations with the pointer itself but with its pointed value.
+
+#### Structs
+A struct is a collection of fields. It's declared like:
+
+```
+type {struct_name} struct {
+	x int
+	...
+}
+```
+Struct fields are accessed as: ```{struct_name}.x```
+
+
+When a **pointer** ```p``` points to a struct (```p := &v```), we can access to the struct fields directly by using ```p.x```. In this case ```p.x``` is equivalent to ```(*p).x```.
+
+You can initialize a struct using one of the following methods:
+
+```go
+type Vertex struct {
+	X, Y int
+}
+
+var (
+	v1 = Vertex{1, 2}  // has type Vertex
+	v2 = Vertex{X: 1}  // Y:0 is implicit
+	v3 = Vertex{}      // X:0 and Y:0
+	p  = &Vertex{1, 2} // has type *Vertex
+)
+```
+> When using the subset field syntax, the order of the fields is **irrelevant**
+
+
 ### Tricks
 ##### Print the type and value of a variable
 ```go

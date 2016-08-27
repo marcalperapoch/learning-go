@@ -273,6 +273,96 @@ var (
 ```
 > When using the subset field syntax, the order of the fields is **irrelevant**
 
+#### Arrays
+Arrays in Go are declared with type ```[n]T``` where ```T``` is the type and ```n``` the array size, which is fixed so they **cannot be resized**. Examples:
+
+```go
+var a [10]int
+primes := [6]int{2, 3, 5, 7, 11, 13}
+```
+Arrays indexs are **0-th** based.
+
+#### Slices
+A slice, is a dynamically-sized, flexible view into the elements of an array. Declared as ```[]T```, it represents a slice with elements of type T.
+
+```go
+primes := [6]int{2, 3, 5, 7, 11, 13}
+var s []int = primes[1:4]
+```
+Slices are like projections of an array, they just describe a section of an underlying array.
+
+>Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes.
+
+However, Slices can be used as **literals**. Declaring slices this way, automatically creates the underlaying array and builds the slice that references it with the same operation.
+
+```go
+[]bool{true, true, false}
+q := []int{2, 3, 5, 7, 11, 13}
+```
+
+When slicing, you may omit the high or low bounds to use their defaults instead. The default is zero for the low bound (```a[:10]``` is equivalent to ```a[0:10]```]) and the length of the slice for the high bound (```a[1:]``` is equivalent to ```a[1:size]```).
+
+A slice has both a **length** and a **capacity**.
+
+* **length**: is the number of elements it contains.
+* **capacity**: is the number of elements in the underlying array, counting from the first element in the slice.
+
+The length and capacity of a slice ```s``` can be obtained using the expressions ```len(s)``` and ```cap(s)```.
+
+You can extend a slice's length by re-slicing it, provided it has sufficient capacity. For example:
+
+```go
+s := []int{2, 3, 5, 7, 11, 13}
+// Drop its first two values.
+s = s[2:]
+// runtime error: slice bounds out of range
+s = s[:6]
+```
+
+The zero value (_length_ and _capacity_ 0) of a slice is ```nil```.
+
+You can also create **dynamically-sized** arrays/**slices** using the ```make``` function.
+
+```go
+a := make([]int, 5)  // len(a)=5
+b := make([]int, 0, 5) // len(b)=0, cap(b)=5
+```
+
+Moreover you can **append new elements** to a slice using the _built-in_ ```append```function.
+
+```go
+func append(s []T, vs ...T) []T
+```
+```go
+s = append(s, 2, 3, 4)
+```
+> Atention: the ```append``` function returns a value! It does not modify the original slice.
+
+#### Matrixs and Slices of slices
+Slices can contain any type, including other slices.
+
+```go
+board := [][]string{
+	[]string{"_", "_", "_"},
+	[]string{"_", "_", "_"},
+	[]string{"_", "_", "_"},
+}
+
+// The players take turns.
+board[0][0] = "X"
+```
+
+#### Arrays iteration
+Can be done using the **range** operand of the ```for``` loop.
+
+```go
+var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
+for index, value := range pow {
+}
+```
+When ranging over a slice, two values are returned for each iteration. The first is the index, and the second is a **copy** of the element at that index.
+
+You can skip the _index_ or _value_ by assigning to ```_```. Moreover if you only want the index you can remove all the ```,value```part.
 
 ### Tricks
 ##### Print the type and value of a variable

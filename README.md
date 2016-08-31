@@ -364,6 +364,97 @@ When ranging over a slice, two values are returned for each iteration. The first
 
 You can skip the _index_ or _value_ by assigning to ```_```. Moreover if you only want the index you can remove all the ```,value```part.
 
+#### Maps
+The zero value of a map is ```nil```. A ```nil``` map has no keys, nor can keys be added.
+
+To initialize a map, you need to use the ```make```function with the following syntax:
+```map[keys_type]values_type```. For example:
+
+```go
+type Vertex struct {
+	Lat, Long float64
+}
+
+var m = make(map[string]Vertex)
+m["Bell Labs"] = Vertex{
+	40.68433, -74.39967,
+}
+```
+Maps can be initialized at construction time:
+
+```go
+var m = map[string]Vertex{
+	"Bell Labs": Vertex{
+		40.68433, -74.39967,
+	},
+	"Google": Vertex{
+		37.42202, -122.08408,
+	},
+}
+```
+The declaration of ```Vertex```inside the map can be infered, so there's no need to declare it again.
+
+```go
+var m = map[string]Vertex{
+	"Bell Labs": {40.68433, -74.39967},
+	"Google":    Vertex{37.42202, -122.08408},
+}
+```
+
+**Operations**:
+
+* Insert/Update: ```m[key] = elem```
+* Get: ```elem = m[key]```
+* Delete: ```delete(m, key)```
+* Contains: ```elem, ok = m[key]``` or ```elem, ok := m[key]``` if haven't been declared yet
+
+In the case of "contains" operation, if ```key``` is in ```m```, ```ok``` is ```true```. If not, ```ok``` is ```false```.
+
+If ```key``` is not in the map, then ```elem``` is the zero value for the map's element type.
+
+#### Functions
+
+> Functions are values too.
+
+They can be passed around just like other values, for example: as function arguments and return values.
+
+```go
+hypot := func(x, y float64) float64 {
+	return math.Sqrt(x*x + y*y)
+}
+fmt.Println(hypot(5, 12))
+```
+
+#### Closures
+ A closure is a function value that references variables from outside its body. The function may access and assign to the referenced variables; in this sense the function is "bound" to the variables.
+ 
+ ```go
+// adder is a function that returns a function (that takes an int param)
+// that returns an int
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+
+func main() {
+	pos, neg := adder(), adder()
+	for i := 0; i < 10; i++ {
+		fmt.Println(
+			pos(i),
+			neg(-2*i),
+		)
+	}
+}
+ ```
+
+In the example above, the adder function returns a closure. Each closure is bound to its own sum variable.
+
+#### Methods
+
+
 ### Tricks
 ##### Print the type and value of a variable
 ```go

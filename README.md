@@ -425,6 +425,8 @@ hypot := func(x, y float64) float64 {
 fmt.Println(hypot(5, 12))
 ```
 
+Of course they can have pointers as arguments. This can be useful to modify the value of the argument parameter.
+
 #### Closures
  A closure is a function value that references variables from outside its body. The function may access and assign to the referenced variables; in this sense the function is "bound" to the variables.
  
@@ -452,7 +454,69 @@ func main() {
 
 In the example above, the adder function returns a closure. Each closure is bound to its own sum variable.
 
-#### Methods
+### Methods and classes
+
+Go has **no classes**. However, method can be bounded to a type (what they call _receiver_).
+
+The method syntax is a function but with the _receiver_ between the ```func ``` keyword and the method name.
+
+```go
+func (v Vertex) Abs() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+func main() {
+	v := Vertex{3, 4}
+	fmt.Println(v.Abs())
+}
+```
+In this example, the ```Abs``` method has a receiver of type ```Vertex``` named ```v```.
+
+**Important consideration**: the _receiver_ type needs to be defined in the same pacakge as the method.
+> You cannot declare a method with a receiver whose type is defined in another package (which includes the built-in types such as ```int```).
+
+For these reason, if you want to have a _receiver_ of the kind ```float```, for example, you need to do something like:
+
+```go
+type MyFloat float64
+
+func (f MyFloat) Abs() float64 {
+	if f < 0 {
+		return float64(-f)
+	}
+	return float64(f)
+}
+```
+The _receiver_ can also be a **pointer** ```*T``` to some type ```T```. If that, the method will be able **to modify the value** where the _receiver_ points. Example:
+
+```go
+type Vertex struct {
+	X, Y float64
+}
+func (v *Vertex) Scale(f float64) {
+	v.X = v.X * f
+	v.Y = v.Y * f
+}
+func main() {
+	v := Vertex{3, 4}
+	v.Scale(10)
+	fmt.Println(v)
+}
+```
+
+**Must be noticed**
+
+**Functions** with a pointer argument must take a pointer (only ```&T```is accepted) otherwise it'll not compile. However, **methods** with pointer receivers take either a value (```v```) or a pointer (```&v```) (_Go_ will automatically convert it to reference). For example ```v.Scale(5)``` would be interpreted as ```(&v).Scale(5)```.
+
+In the same way, **functions** that take a value argument must take a value of that specific type (and only that). In the other hand, **methods** with value receivers take either a value or a pointer as the receiver when they are called (again, _Go_ will do the correct interpretation)
+
+#### Prefer pointer receivers over values
+* The method will be able to modify the value its receiver points to
+* To avoid copy the value on each method call
+
+>Use pointer receivers or values but not a mixture of both.
+
+### Interfaces
 
 
 ### Tricks

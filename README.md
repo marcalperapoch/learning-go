@@ -2,6 +2,33 @@
 
 ## Learning notes
 
+### Language characteristics
+
+* It has automatic memory management or *garbage collection*.
+* It hasn't:
+  * Implicit numeric conversions
+  * constructors/destructors
+  * operator overloading
+  * default parameters
+  * inheritence
+  * generics
+  * exceptions
+  * macros
+  * function annotations
+  * thread-local storage
+
+### Basic commands
+
+```shell
+# compile, link and run
+$ go run helloworld.go
+```
+
+```shell
+# compile
+$ go build helloworld.go
+```
+
 ### Hello world program
 ```go
 package main
@@ -30,6 +57,8 @@ import (
 fmt.Printf("Now you have %g problems.", math.Sqrt(7))
 ```
 Note that the package _fmt_ needs to be imported.
+
+Package **main** is an special package that defines an executable program, not a library.
 
 
 ### Public/Private names
@@ -99,9 +128,9 @@ You can also declare variables in blocks, as with import statements. Ex:
 
 ```go
 var (
-	finsihed 	bool 			= false
-	max			int				= 4
-	z			complex128	= cmplx.Sqrt(-5 + 12i)
+	finsihed 	bool 			  = false
+	max			  int				  = 4
+	z			    complex128	= cmplx.Sqrt(-5 + 12i)
 )
 ```
 
@@ -169,7 +198,18 @@ for sum < 1000 {
 }
 ```
 
+Another form is iteration over a **range** of values, which produces a pair of values (index, value) in each iteration.
+
+```go
+for index, val := range os.Args[1:] {
+ // do whatever 
+}
+```
+
+Note that if index or val is not neede a special **blank identifier** (`_`) can be used instead.
+
 #### Conditionals
+
 ```go
 if x > 10 {
 	return "bigger"
@@ -429,7 +469,7 @@ Of course they can have pointers as arguments. This can be useful to modify the 
 
 #### Closures
  A closure is a function value that references variables from outside its body. The function may access and assign to the referenced variables; in this sense the function is "bound" to the variables.
- 
+
  ```go
 // adder is a function that returns a function (that takes an int param)
 // that returns an int
@@ -520,7 +560,8 @@ In the same way, **functions** that take a value argument must take a value of t
 
 
 ### Tricks
-##### Print the type and value of a variable
+#### Print the type and value of a variable
+
 ```go
 v := 42 
 fmt.Printf("v is of type %T with value %v\n", v, v)
@@ -530,3 +571,18 @@ fmt.Printf("v is of type %T with value %v\n", v, v)
 import "time"
 today := time.Now().Weekday()
 ```
+
+#### Read from the Standard input
+
+```go
+import (
+	"bufio"
+  "fmt"
+  "os"
+)
+input := bufio.NewScanner(os.Stdin)
+for input.Scan() {
+  fmt.Println(intput.Text())
+}
+```
+
